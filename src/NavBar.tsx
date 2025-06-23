@@ -1,32 +1,33 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const NavBar: React.FC = () => {
   return (
     <nav className="navbar">
       <div className="nav-container">
         <div className="nav-logo">
-          <a href="/">HatPro</a>
+          <Link to="/">HatPro</Link>
         </div>
         <ul className="nav-menu">
           <li className="nav-item">
-            <a href="/" className="nav-link">
+            <Link to="/" className="nav-link">
               Home
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="/about" className="nav-link">
-              About
-            </a>
+            <Link to="/optimizer" className="nav-link">
+              Optimizer
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="/contact" className="nav-link">
+            <Link to="/contact" className="nav-link">
               Contact
-            </a>
+            </Link>
           </li>
           <li className="nav-item">
-            <a href="/signin" className="nav-link nav-link-signin">
+            <Link to="/signin" className="nav-link nav-link-signin">
               Sign In
-            </a>
+            </Link>
           </li>
         </ul>
       </div>

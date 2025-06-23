@@ -1,25 +1,23 @@
 "use client";
 
-import {
-  Authenticated,
-  Unauthenticated,
-  useConvexAuth,
-  useMutation,
-  useQuery,
-} from "convex/react";
-import { api } from "../convex/_generated/api";
-import { useAuthActions } from "@convex-dev/auth/react";
-import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import HomePage from "./HomePage";
+import LoginPage from "./LoginPage";
+import Optimizer from "./Optimizer";
 
 export default function App() {
   return (
-    <>
+    <Router>
       <NavBar />
-      <HomePage />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/signin" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/optimizer" element={<Optimizer />} />
+      </Routes>
       <Footer />
-    </>
+    </Router>
   );
 }
