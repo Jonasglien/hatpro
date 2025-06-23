@@ -25,8 +25,8 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies and serve package locally
-RUN npm ci --only=production && npm install serve
+# Install only production dependencies (serve is now included)
+RUN npm ci --only=production
 
 # Copy built application from builder stage
 COPY --from=builder /app/dist ./dist
