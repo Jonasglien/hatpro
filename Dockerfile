@@ -37,6 +37,14 @@ COPY --from=builder /app/dist ./dist
 COPY start.sh ./
 RUN chmod +x start.sh
 
+# Debug: Check what's installed
+RUN echo "=== DEBUG INFO ===" && \
+    ls -la node_modules/.bin/ | head -10 && \
+    echo "serve location:" && \
+    find . -name "serve*" -type f && \
+    echo "PATH: $PATH" && \
+    echo "=================="
+
 # Railway handles container security, so user creation not needed
 
 # Expose port (Railway will override with $PORT)
