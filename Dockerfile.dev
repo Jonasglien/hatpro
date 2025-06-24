@@ -1,20 +1,39 @@
-# Development Dockerfile
-FROM node:18-alpine
+# Development Dockerfile with Caddy
+FROM node:lts-alpine AS build
 
-# Set working directory
+# Set config
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+ENV NPM_CONFIG_FUND=false
+
+# Create and change to the app directory.
 WORKDIR /app
 
-# Copy package files
+# Copy the files to the container image
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies)
-RUN npm ci
+# Remove package-lock.json and install packages to fix rollup optional deps issue
+RUN rm -f package-lock.json && npm install
 
-# Copy source code
-COPY . .
+# Copy local code to the container image.
+COPY . ./
 
-# Expose Vite dev server port
-EXPOSE 5173
+# Build the app in development mode
+RUN npm run build
 
-# Start development server
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"] 
+# Use the Caddy image
+FROM caddy
+
+# Create and change to the app directory.
+WORKDIR /app
+
+# Copy Caddyfile to the container image.
+COPY Caddyfile ./
+
+# Copy local code to the container image.
+RUN caddy fmt Caddyfile --overwrite
+
+# Copy files to the container image.
+COPY --from=build /app/dist ./dist
+
+# Use Caddy to run/serve the app
+CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"] 

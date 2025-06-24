@@ -1,54 +1,40 @@
-# Build stage
-FROM node:24-alpine AS builder
+# Use the Node alpine official image
+# https://hub.docker.com/_/node
+FROM node:lts-alpine AS build
 
-# Set working directory
+# Set config
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+ENV NPM_CONFIG_FUND=false
+
+# Create and change to the app directory.
 WORKDIR /app
 
-# Copy package files
+# Copy the files to the container image
 COPY package*.json ./
 
-# Install all dependencies (including dev dependencies for building)
-RUN npm ci
+# Remove package-lock.json and install packages to fix rollup optional deps issue
+RUN rm -f package-lock.json && npm install
 
-# Copy source code
-COPY . .
+# Copy local code to the container image.
+COPY . ./
 
-RUN rm -rf node_modules package-lock.json && npm install
+# Build the app.
+RUN npm run build
 
-# Build the application (frontend only for production)
-RUN npm run build:frontend || npm run build
+# Use the Caddy image
+FROM caddy AS production
 
-# Production stage
-FROM node:24-alpine AS production
-
-# Set working directory
+# Create and change to the app directory.
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copy Caddyfile to the container image.
+COPY Caddyfile ./
 
-# Install only production dependencies (serve is now included)
-RUN npm ci
+# Copy local code to the container image.
+RUN caddy fmt Caddyfile --overwrite
 
-# Copy built application from builder stage
-COPY --from=builder /app/dist ./dist
+# Copy files to the container image.
+COPY --from=build /app/dist ./dist
 
-# Copy startup script
-COPY start.sh ./
-RUN chmod +x start.sh
-
-# Debug: Check what's installed
-RUN echo "=== DEBUG INFO ===" && \
-    ls -la node_modules/.bin/ | head -10 && \
-    echo "serve location:" && \
-    find . -name "serve*" -type f && \
-    echo "PATH: $PATH" && \
-    echo "=================="
-
-# Railway handles container security, so user creation not needed
-
-# Expose port (Railway will override with $PORT)
-EXPOSE 3000
-
-# Start the application
-CMD ["npm", "start"] 
+# Use Caddy to run/serve the app
+CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]
