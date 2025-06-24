@@ -14,7 +14,8 @@
 }
 
 # site block, listens on the $PORT environment variable, automatically assigned by railway
-0.0.0.0:{$PORT:3000} {
+0.0.0.0:80 {
+    reverse_proxy hatpro:3000
     # access logs
     log {
         format json # set access log format to json mode
