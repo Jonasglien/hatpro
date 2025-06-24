@@ -36,5 +36,10 @@ RUN caddy fmt Caddyfile --overwrite
 # Copy files to the container image.
 COPY --from=build /app/dist ./dist
 
+# Debug: Check if dist folder exists and has content
+RUN ls -la && ls -la dist/
+
+EXPOSE 3000
+
 # Use Caddy to run/serve the app
 CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]
