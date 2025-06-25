@@ -5,12 +5,21 @@ import { ConvexReactClient } from "convex/react";
 import "./index.css";
 import App from "./App.tsx";
 
-const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL as string);
+const convexUrl = import.meta.env.VITE_CONVEX_URL as string;
+const convex = convexUrl ? new ConvexReactClient(convexUrl) : null;
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ConvexAuthProvider client={convex}>
-      <App />
-    </ConvexAuthProvider>
+    {convex ? (
+      <ConvexAuthProvider client={convex}>
+        <App />
+      </ConvexAuthProvider>
+    ) : (
+      <div style={{ padding: "20px", textAlign: "center" }}>
+        <h1>HatPro App</h1>
+        <p>⚠️ VITE_CONVEX_URL environment variable not set</p>
+        <p>Add it in Railway dashboard to enable full functionality</p>
+      </div>
+    )}
   </StrictMode>,
 );
