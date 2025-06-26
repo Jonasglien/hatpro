@@ -15,22 +15,21 @@ COPY package*.json ./
 # Remove package-lock.json and install packages to fix rollup optional deps issue
 RUN rm -f package-lock.json && npm install
 
-# Copy local code to the container image.
-COPY . ./
+COPY . . 
 
 # Build the app.
 RUN npm run build
 
-# Use the Caddy image
-FROM caddy AS production
+# STAGE 2: Serve with Caddy
 
-# Create and change to the app directory.
+FROM caddy:alpine AS production
+
 WORKDIR /app
 
-# Copy Caddyfile to the container image.
-COPY Caddyfile ./
+COPY Caddyfile ./Caddyfile
 
-# Copy local code to the container image.
+# Use caddy fmt properly (optional though)
+
 RUN caddy fmt Caddyfile --overwrite
 
 # Copy files to the container image.

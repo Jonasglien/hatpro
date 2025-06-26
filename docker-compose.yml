@@ -1,5 +1,5 @@
 services:
-  hatpro-web:
+  hatpro-prod:
     build:
       context: .
       dockerfile: Dockerfile
@@ -10,9 +10,8 @@ services:
       - NODE_ENV=production
       - PORT=3000
     restart: unless-stopped
-    container_name: hatpro-webapp
-    
-  # Development service with Caddy
+    container_name: hatpro-prod
+
   hatpro-dev:
     build:
       context: .

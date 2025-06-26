@@ -13,8 +13,8 @@
     }
 }
 
-# site block, listens on PORT env var (Railway) or defaults to 3000 (local)
-:{$PORT:3000} {
+# site block, explicitly bind to 0.0.0.0 for Railway
+0.0.0.0:{$PORT:3000} {
     # access logs
     log {
         format json # set access log format to json mode
