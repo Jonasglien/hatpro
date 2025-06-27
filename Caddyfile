@@ -14,7 +14,7 @@
 }
 
 # site block, match any request on any port (Railway will route correctly)
-* {
+:$PORT {
     # access logs
     log {
         format json # set access log format to json mode
