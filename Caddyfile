@@ -13,8 +13,8 @@
     }
 }
 
-# site block, listen on port 3000 for any host (localhost, 0.0.0.0, etc.)
-0.0.0.0:{$PORT:3000} {
+# site block, bind to all interfaces on Railway's assigned port
+:{$PORT:3000} {
     # access logs
     log {
         format json # set access log format to json mode
