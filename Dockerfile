@@ -10,10 +10,10 @@ ENV NPM_CONFIG_FUND=false
 WORKDIR /app
 
 # Copy the files to the container image
-COPY package*.json ./
+COPY package.json ./
 
 # Remove package-lock.json and install packages to fix rollup optional deps issue
-RUN rm -f package-lock.json && npm install
+RUN npm install
 
 COPY . . 
 
