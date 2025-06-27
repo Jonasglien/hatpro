@@ -13,8 +13,8 @@
     }
 }
 
-# site block, bind to all interfaces on Railway's assigned port
-:{$PORT:3000} {
+# site block, match any request on any port (Railway will route correctly)
+* {
     # access logs
     log {
         format json # set access log format to json mode
